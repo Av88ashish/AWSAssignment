@@ -10,12 +10,12 @@ COPY ["AwsAssignment/AwsAssignment.csproj", "AwsAssignment/"]
 RUN dotnet restore "AwsAssignment/AwsAssignment.csproj"
 COPY . .
 WORKDIR "/src/AwsAssignment"
-RUN dotnet build "AwsAssignment.csproj" -c Release -o /app/build
+RUN dotnet build "AwsAssignment/AwsAssignment.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "AwsAssignment.csproj" -c Release -o /app/publish
+RUN dotnet publish "AwsAssignment/AwsAssignment.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "AwsAssignment.dll"]
+ENTRYPOINT ["dotnet", "AwsAssignment/AwsAssignment.dll"]
