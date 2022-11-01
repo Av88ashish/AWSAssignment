@@ -3,19 +3,20 @@
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
 EXPOSE 80
+EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["AwsAssignment/AwsAssignment.csproj", "AwsAssignment/"]
-RUN dotnet restore "AwsAssignment/AwsAssignment.csproj"
+COPY ["CloudAssignment/CloudAssignment.csproj", "CloudAssignment/"]
+RUN dotnet restore "CloudAssignment/CloudAssignment.csproj"
 COPY . .
-WORKDIR "/src/AwsAssignment"
-RUN dotnet build "AwsAssignment/AwsAssignment.csproj" -c Release -o /app/build
+WORKDIR "/src/CloudAssignment"
+RUN dotnet build "CloudAssignment.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "AwsAssignment/AwsAssignment.csproj" -c Release -o /app/publish
+RUN dotnet publish "CloudAssignment.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "AwsAssignment/AwsAssignment.dll"]
+ENTRYPOINT ["dotnet", "CloudAssignment.dll"]
